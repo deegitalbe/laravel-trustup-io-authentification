@@ -38,7 +38,7 @@ class TrustupIoUserGuard implements Guard
      */
     public function user()
     {
-        return $this->user ?? app(TrustupIoUserProvider::class)->retrieveById( session()->get('token') );
+        return $this->user ?? app(TrustupIoUserProvider::class)->getUser();
     }
 
     /**
