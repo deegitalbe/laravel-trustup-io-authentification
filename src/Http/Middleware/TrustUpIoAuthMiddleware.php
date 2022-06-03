@@ -18,15 +18,15 @@ class TrustUpIoAuthMiddleware
     {
         if ( ! auth()->check() ) {
             return redirect()->to(
-                config('laravel-trustup-io-authentification.url').'?callback=' . urlencode(url()->to('/'))
+                config('trustup-io-authentification.url').'?callback=' . urlencode(url()->to('/'))
             );
         }
 
-        $roles = $roles ? explode('|', $roles) : config('laravel-trustup-io-authentification.roles');
+        $roles = $roles ? explode('|', $roles) : config('trustup-io-authentification.roles');
 
         if ( ! auth()->user()->hasAnyRole($roles) ) {
             return redirect()->to(
-                config('laravel-trustup-io-authentification.url').'/errors/invalid-role'
+                config('trustup-io-authentification.url').'/errors/invalid-role'
             );
         }
 

@@ -20,11 +20,11 @@ class LaravelTrustupIoAuthentificationServiceProvider extends PackageServiceProv
          */
         $package
             ->name('laravel-trustup-io-authentification')
-            ->hasConfigFile();
+            ->hasConfigFile()
+            ->hasRoute('callback');
             // ->hasViews()
             // ->hasMigration('create_laravel-trustup-io-authentification_table')
             // ->hasCommand(LaravelTrustupIoAuthentificationCommand::class)
-            // ->hasRoute('webhooks');
     }
     
     public function packageBooted()

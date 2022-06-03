@@ -5,6 +5,7 @@ namespace Deegitalbe\LaravelTrustupIoAuthentification;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Deegitalbe\LaravelTrustupIoAuthentification\TrustupIoUser;
 
 class TrustupIoUserProvider implements UserProvider
 {
@@ -25,7 +26,7 @@ class TrustupIoUserProvider implements UserProvider
         $response = Http::withHeaders([
                 'Authorization' => session()->get(self::SESSION_KEY)
             ])
-            ->get(config('laravel-trustup-io-authentification.url').'/api/user')
+            ->get(config('trustup-io-authentification.url').'/api/user')
             ->throw()
             ->json();
             
