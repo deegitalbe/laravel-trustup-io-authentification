@@ -1,0 +1,62 @@
+{
+    "name": "deegitalbe/laravel-trustup-io-authentification",
+    "description": "Connect your Laravel project to our centralized authentication service",
+    "keywords": [
+        "deegitalbe",
+        "laravel",
+        "laravel-trustup-io-authentification"
+    ],
+    "homepage": "https://github.com/deegitalbe/laravel-trustup-io-authentification",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Florian Husquinet",
+            "email": "florian.husquinet@deegital.be",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "spatie/laravel-package-tools": "^1.9.2",
+        "illuminate/contracts": "^8.0|^9.0"
+    },
+    "require-dev": {
+        "nunomaduro/collision": "^6.0",
+        "orchestra/testbench": "^7.0",
+        "pestphp/pest": "^1.21",
+        "pestphp/pest-plugin-laravel": "^1.1",
+        "phpunit/phpunit": "^9.5",
+        "spatie/laravel-ray": "^1.26"
+    },
+    "autoload": {
+        "psr-4": {
+            "Deegitalbe\\LaravelTrustupIoAuthentification\\": "src",
+            "Deegitalbe\\LaravelTrustupIoAuthentification\\Database\\Factories\\": "database/factories"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Deegitalbe\\LaravelTrustupIoAuthentification\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Deegitalbe\\LaravelTrustupIoAuthentification\\LaravelTrustupIoAuthentificationServiceProvider"
+            ],
+            "aliases": {
+                "LaravelTrustupIoAuthentification": "Deegitalbe\\LaravelTrustupIoAuthentification\\Facades\\LaravelTrustupIoAuthentification"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
