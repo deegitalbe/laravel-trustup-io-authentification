@@ -3,6 +3,7 @@
 namespace Deegitalbe\LaravelTrustupIoAuthentification;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Deegitalbe\LaravelTrustupIoAuthentification\TrustupIoUser;
@@ -10,21 +11,26 @@ use Deegitalbe\LaravelTrustupIoAuthentification\TrustupIoUser;
 class TrustupIoUserProvider implements UserProvider
 {
 
-    const SESSION_KEY = 'trustup.io.user';
+    const COOKIE_KEY = 'trustup_io_user_token';
 
-    public function setTokenInSession(string $token): void
+    public function setTokenInCookie(string $token): void
     {
-        session()->put(self::SESSION_KEY, $token);
+        Cookie::queue(self::COOKIE_KEY, $token, config('trustup-io-authentification.duration'));
+    }
+
+    public function getUser()
+    {
+        if ( ! request()->cookie(self::COOKIE_KEY) ) {
+            return null;
+        }
+
+        return $this->retrieveById(request()->cookie(self::COOKIE_KEY));
     }
     
     public function retrieveById($identifier)
     {
-        if ( ! session()->get(self::SESSION_KEY) ) {
-            return null;
-        }
-
         $response = Http::withHeaders([
-                'Authorization' => session()->get(self::SESSION_KEY)
+                'Authorization' => $identifier
             ])
             ->get(config('trustup-io-authentification.url').'/api/user')
             ->throw()
