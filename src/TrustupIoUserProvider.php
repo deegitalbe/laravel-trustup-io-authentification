@@ -18,13 +18,20 @@ class TrustupIoUserProvider implements UserProvider
         Cookie::queue(self::COOKIE_KEY, $token, config('trustup-io-authentification.duration'));
     }
 
+    public function getToken()
+    {
+        return request()->header('Authorization')
+            ? request()->header('Authorization')
+            : request()->cookie(self::COOKIE_KEY);
+    }
+
     public function getUser()
     {
-        if ( ! request()->cookie(self::COOKIE_KEY) ) {
+        if ( ! $this->getToken() ) {
             return null;
         }
 
-        return $this->retrieveById(request()->cookie(self::COOKIE_KEY));
+        return $this->retrieveById($this->getToken());
     }
     
     public function retrieveById($identifier)
@@ -32,15 +39,20 @@ class TrustupIoUserProvider implements UserProvider
         $response = Http::withHeaders([
                 'Authorization' => $identifier
             ])
-            ->get(config('trustup-io-authentification.url').'/api/user')
-            ->throw()
-            ->json();
-            
-        if ( ! $response['user'] ) {
+            ->acceptJson()
+            ->get(config('trustup-io-authentification.url').'/api/user');
+
+        if ( ! $response->ok() ) {
+            return null;
+        }
+
+        $body = $response->json();
+
+        if ( ! $body || ! $body['user'] ) {
             return null;
         }
         
-        return new TrustupIoUser($response['user']);
+        return new TrustupIoUser($body['user']);
     }
     
     public function retrieveByToken($identifier, $token)

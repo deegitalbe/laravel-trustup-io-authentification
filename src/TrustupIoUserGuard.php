@@ -42,6 +42,16 @@ class TrustupIoUserGuard implements Guard
     }
 
     /**
+     * Get the currently authenticated user token.
+     *
+     * @return string|null
+     */
+    public function token()
+    {
+        return app(TrustupIoUserProvider::class)->getToken();
+    }
+
+    /**
      * Get the ID for the currently authenticated user.
      *
      * @return int|string|null

@@ -17,17 +17,21 @@ class TrustUpIoAuthMiddleware
     public function handle(Request $request, Closure $next, string $roles = null)
     {
         if ( ! auth()->check() ) {
-            return redirect()->to(
-                config('trustup-io-authentification.url').'?callback=' . urlencode(url()->to('/'))
-            );
+            return $request->expectsJson()
+                ? response(['message' => 'Unauthentificated', 'redirect' => config('trustup-io-authentification.url').'?callback=' . urlencode(url()->to('/'))], 401)
+                : redirect()->to(
+                    config('trustup-io-authentification.url').'?callback=' . urlencode(url()->to('/'))
+                );
         }
 
         $roles = $roles ? explode('|', $roles) : config('trustup-io-authentification.roles');
 
         if ( ! auth()->user()->hasAnyRole($roles) ) {
-            return redirect()->to(
-                config('trustup-io-authentification.url').'/errors/invalid-role'
-            );
+            return $request->expectsJson()
+                ? response(['message' => 'Invalid role', 'redirect' => config('trustup-io-authentification.url').'/errors/invalid-role'], 403)
+                : redirect()->to(
+                    config('trustup-io-authentification.url').'/errors/invalid-role'
+                );
         }
 
         return $next($request);
