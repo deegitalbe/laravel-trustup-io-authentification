@@ -14,6 +14,11 @@ class TrustupIoUser implements Authenticatable
             $this->{$key} = $attribute;
         }
     }
+
+    public static function find(int $id): ?self
+    {
+        return app(TrustupIoUserProvider::class)->retrieveById($id);
+    } 
     
     public function getAuthIdentifierName()
     {
