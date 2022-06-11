@@ -13,6 +13,8 @@ class TrustupIoUserProvider implements UserProvider
 
     const COOKIE_KEY = 'trustup_io_user_token';
 
+    public ?TrustupIoUserContract $user = null;
+
     public function setTokenInCookie(string $token): void
     {
         Cookie::queue(self::COOKIE_KEY, $token, config('trustup-io-authentification.duration'));
@@ -48,11 +50,16 @@ class TrustupIoUserProvider implements UserProvider
     public function makeUser(array $attributes): TrustupIoUserContract
     {
         $userClass = app(TrustupIoUserContract::class);
-        return new $userClass($attributes);
+        $this->user = new $userClass($attributes);
+        return $this->user;
     }
     
     public function retrieveById($identifier)
     {
+        if ( $this->user ) {
+            return $this->user;
+        }
+
         $response = $this->http()
             ->get('users/'.$identifier);
 
@@ -71,6 +78,10 @@ class TrustupIoUserProvider implements UserProvider
     
     public function retrieveByBearerToken($token)
     {
+        if ( $this->user ) {
+            return $this->user;
+        }
+
         $response = $this->http([
                 'Authorization' => $token
             ])
