@@ -36,5 +36,9 @@ class LaravelTrustupIoAuthentificationServiceProvider extends PackageServiceProv
         Auth::extend('trustup.io', function ($app) {
             return $app->make(TrustupIoUserGuard::class);
         });
+
+        $this->app->bind(TrustupIoUserContract::class, function() {
+            return config('trustup-io-authentification.model');
+        });
     }
 }

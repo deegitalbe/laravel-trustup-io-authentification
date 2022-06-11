@@ -44,6 +44,12 @@ class TrustupIoUserProvider implements UserProvider
 
         return $this->retrieveByBearerToken($this->getToken());
     }
+
+    public function makeUser(array $attributes): TrustupIoUserContract
+    {
+        $userClass = app(TrustupIoUserContract::class);
+        return new $userClass($attributes);
+    }
     
     public function retrieveById($identifier)
     {
@@ -60,7 +66,7 @@ class TrustupIoUserProvider implements UserProvider
             return null;
         }
         
-        return new TrustupIoUser($body['user']);
+        return $this->makeUser($body['user']);
     }
     
     public function retrieveByBearerToken($token)
@@ -79,8 +85,8 @@ class TrustupIoUserProvider implements UserProvider
         if ( ! $body || ! $body['user'] ) {
             return null;
         }
-        
-        return new TrustupIoUser($body['user']);
+
+        return $this->makeUser($body['user']);
     }
     
     public function retrieveByToken($identifier, $token)
@@ -101,6 +107,15 @@ class TrustupIoUserProvider implements UserProvider
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
         return false;
+    }
+
+    public function logout()
+    {
+        Cookie::queue(Cookie::forget(self::COOKIE_KEY));
+
+        return redirect()->away(
+            config('trustup-io-authentification.url').'/logout?callback=' . urlencode(url()->to('/'))
+        );
     }
 
 }

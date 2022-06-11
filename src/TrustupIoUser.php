@@ -5,7 +5,7 @@ namespace Deegitalbe\LaravelTrustupIoAuthentification;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 
-class TrustupIoUser implements Authenticatable
+class TrustupIoUser implements Authenticatable, TrustupIoUserContract
 {
 
     public function __construct(array $attributes)
