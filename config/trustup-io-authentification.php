@@ -17,9 +17,19 @@ return [
     'model' => \Deegitalbe\LaravelTrustupIoAuthentification\TrustupIoUser::class,
 
     /**
+     * Which guard are you using to authenticate your users.
+     * Default value if "null" which results to auth()->user().
+     * Are you using two different guards? You can define it on the Middleware level as second parameter.
+     * Ex: TrustUpIoAuthMiddleware::class.':Super Admin|Translator';
+     */
+    'guard' => 'null',
+
+    /**
      * Define which roles should be able to access your application.
-     * Make sure to use the Deegitalbe\LaravelTrustupIoAuthentification\Http\Middleware\TrustUpIoAuthMiddleware
-     * without any parameters on your routes for this to work.
+     * You can override these roles on the Deegitalbe\LaravelTrustupIoAuthentification\Http\Middleware\TrustUpIoAuthMiddleware
+     * as a first parameter.
+     * Want to pass multiple roles to your middleware? Separate your roles with a "|"
+     * Ex: TrustUpIoAuthMiddleware::class.':Super Admin|Translator';
      */
     'roles' => [
         'Super Admin'
