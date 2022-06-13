@@ -47,8 +47,14 @@ class TrustupIoUserProvider implements UserProvider
         return $this->retrieveByBearerToken($this->getToken());
     }
 
-    public function makeUser(array $attributes): TrustupIoUserContract
+    public function makeUser(array $attributes)
     {
+        if ( config('trustup-io-authentification.eloquent_model') ) {
+            $modelClass = config('trustup-io-authentification.eloquent_model.namespace');
+            $this->user = $modelClass::where(config('trustup-io-authentification.eloquent_model.column'), $attributes['id'])->firstOrFail();
+            return $this->user;
+        }
+
         $userClass = app(TrustupIoUserContract::class);
         $this->user = new $userClass($attributes);
         return $this->user;

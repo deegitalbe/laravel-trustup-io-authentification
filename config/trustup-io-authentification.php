@@ -17,6 +17,19 @@ return [
     'model' => \Deegitalbe\LaravelTrustupIoAuthentification\TrustupIoUser::class,
 
     /**
+     * Are you accessing trustup's database directly, and have relations on the users table ?
+     * Then you can define your own Eloquent model here, and which column should be used to query it based on the ID of the authed user.
+     * auth()->user() will return that Eloquent model or throw an exception if not found.
+     * 
+     * Please provide a namespace and a column attribute, like this:
+     * 'eloquent_model' => [
+     *   'namespace' => \Modules\User\Entities\User::class,
+     *   'column' => 'id'
+     * ],
+     */
+    'eloquent_model' => null,
+
+    /**
      * Which guard are you using to authenticate your users.
      * Default value if "null" which results to auth()->user().
      * Are you using two different guards? You can define it on the Middleware level as second parameter.
