@@ -46,5 +46,19 @@ return [
      */
     'roles' => [
         'Super Admin'
+    ],
+
+    /**
+     * To improve performance and not constantly query the API to retrieve the logged in user (or another one)
+     * you can enable the cache and set a duration (in minutes).
+     * Each user retrieved from the API will be stored in cache for that duration with the trustup-io-user-cached-{id} key.
+     * 
+     * Note: To retrieve the logged in user from the cache, your application will store the token has cache key.
+     * This might be a lot to store in cache, so don't include a duration too long.
+     * Also note that with a longer cache, you risk having a potentially logged out user to keep accessing your application. 
+     */
+    'cache' => [
+        'enabled' => true,
+        'duration' => 5
     ]
 ];
