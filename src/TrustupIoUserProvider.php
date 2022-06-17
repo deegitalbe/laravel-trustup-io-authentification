@@ -35,13 +35,19 @@ class TrustupIoUserProvider implements UserProvider
 
     public function http(array $headers = [])
     {
-        return Http::withHeaders(
+        $http = Http::withHeaders(
             array_merge($headers, [
                 'X-Server-Authorization' => env('TRUSTUP_SERVER_AUTHORIZATION')
             ])
         )
         ->baseUrl(config('trustup-io-authentification.url').'/api')
         ->acceptJson();
+
+        if (env('APP_ENV') !== "production"):
+            $http->withoutVerifying();
+        endif;
+
+        return $http;
     }
 
     public function getToken()

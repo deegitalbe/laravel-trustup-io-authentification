@@ -3,17 +3,12 @@
 namespace Deegitalbe\LaravelTrustupIoAuthentification;
 
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable;
 
-class TrustupIoUser implements Authenticatable, TrustupIoUserContract
+class TrustupIoUser extends Model implements Authenticatable, TrustupIoUserContract
 {
-
-    public function __construct(array $attributes)
-    {
-        foreach ( $attributes as $key => $attribute ) {
-            $this->{$key} = $attribute;
-        }
-    }
+    protected $guarded = [];
 
     public static function find(int $id): ?self
     {
