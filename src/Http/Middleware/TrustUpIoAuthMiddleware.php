@@ -20,10 +20,12 @@ class TrustUpIoAuthMiddleware
         $guard ??= config('trustup-io-authentification.guard');
 
         if ( ! auth($guard)->check() ) {
+            $redirection = config('trustup-io-authentification.url').'?callback=' . $request->fullUrl();
+            
             return $request->expectsJson()
-                ? response(['message' => 'Unauthentificated', 'redirect' => config('trustup-io-authentification.url').'?callback=' . urlencode(url()->to('/'))], 401)
+                ? response(['message' => 'Unauthentificated', 'redirect' => $redirection], 401)
                 : redirect()->to(
-                    config('trustup-io-authentification.url').'?callback=' . urlencode(url()->to('/'))
+                    $redirection
                 );
         }
 
