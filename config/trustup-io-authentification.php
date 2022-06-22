@@ -35,7 +35,7 @@ return [
      * Are you using two different guards? You can define it on the Middleware level as second parameter.
      * Ex: TrustUpIoAuthMiddleware::class.':Super Admin|Translator';
      */
-    'guard' => 'null',
+    'guard' => null,
 
     /**
      * Define which roles should be able to access your application.
