@@ -237,7 +237,7 @@ class TrustupIoUserProvider implements UserProvider
             return null;
         endif;
 
-        Cache::get($this->getCacheKey($token));
+        return Cache::get($this->getCacheKey($token));
     }
 
     // faire une méthode qui permet de supprimer le cache de l'utilisateur
