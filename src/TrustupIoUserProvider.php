@@ -153,7 +153,7 @@ class TrustupIoUserProvider implements UserProvider
      * @param Response $response
      * @return null
      */
-    protected function handleAuthServerError($token, $response): null
+    protected function handleAuthServerError($token, $response)
     {
         if ($this->isUsingCookie($token)) {
             $this->forgetCookie();
@@ -172,7 +172,7 @@ class TrustupIoUserProvider implements UserProvider
      * @param string|null $token
      * @return null
      */
-    protected function handleInvalidToken($token): null
+    protected function handleInvalidToken($token)
     {
         if ($this->isUsingCookie($token)) {
             $this->forgetCookie();
