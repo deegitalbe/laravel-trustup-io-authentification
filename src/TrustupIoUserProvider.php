@@ -92,12 +92,17 @@ class TrustupIoUserProvider implements UserProvider
 
     public function retrieveById($identifier)
     {
-        if ( $this->cacheEnabled() && Cache::has( $this->getCacheKey($identifier)) ) {
-            return Cache::get( $this->getCacheKey($identifier));
+        if ( $this->isHavingCachedUser($identifier) ) {
+            return $this->getCachedUser($identifier);
         }
 
         $response = $this->http()
             ->get('users/'.$identifier);
+
+        // Server error.
+        if ( $response->serverError() ) {
+            return $this->handleAuthServerError($identifier, $response);
+        }
 
         if ( ! $response->ok() ) {
             return null;
@@ -149,18 +154,20 @@ class TrustupIoUserProvider implements UserProvider
     /**
      * Happening when auth server is not responsding correctly.
      * 
-     * @param string|null $token
+     * @param string|null $identifier
      * @param Response $response
      * @return null
      */
-    protected function handleAuthServerError($token, $response)
+    protected function handleAuthServerError($identifier, $response)
     {
-        if ($this->isUsingCookie($token)) {
+        if ($this->isUsingCookie($identifier)) {
             $this->forgetCookie();
         }
 
         report(
-            (new AuthServerError())->setResponse($response)
+            (new AuthServerError())
+                ->setResponse($response)
+                ->setIdentifier($identifier)
         );
 
         return null;
