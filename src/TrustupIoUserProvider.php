@@ -2,14 +2,17 @@
 
 namespace Deegitalbe\LaravelTrustupIoAuthentification;
 
+use Exception;
 use Illuminate\Support\Str;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Deegitalbe\LaravelTrustupIoAuthentification\TrustupIoUser;
-use Exception;
+use Deegitalbe\LaravelTrustupIoAuthentification\TrustupIoUserContract;
+use Deegitalbe\LaravelTrustupIoAuthentification\Exceptions\AuthServerError;
 
 class TrustupIoUserProvider implements UserProvider
 {
@@ -115,18 +118,23 @@ class TrustupIoUserProvider implements UserProvider
             return $this->user;
         }
 
-        if ( $this->cacheEnabled() && Cache::has( $this->getCacheKey($token) )) {
-            return Cache::get( $this->getCacheKey($token) );
+        if ( $this->isHavingCachedUser($token) ) {
+            return $this->getCachedUser($token);
         }
 
         $response = $this->http([
                 'Authorization' => $token
             ])
             ->get('user');
+        
+        // Server error.
+        if ( $response->serverError() ) {
+            return $this->handleAuthServerError($token, $response);
+        }
 
+        // Invalid token.
         if ( ! $response->ok() ) {
-            report(new Exception('Could not retrieve user from API via token.'));
-            return null;
+            return $this->handleInvalidToken($token);
         }
 
         $body = $response->json();
@@ -137,6 +145,95 @@ class TrustupIoUserProvider implements UserProvider
 
         return $this->makeUser($body['user'], $token);
     }
+
+    /**
+     * Happening when auth server is not responsding correctly.
+     * 
+     * @param string|null $token
+     * @param Response $response
+     * @return null
+     */
+    protected function handleAuthServerError($token, $response): null
+    {
+        if ($this->isUsingCookie($token)) {
+            $this->forgetCookie();
+        }
+
+        report(
+            (new AuthServerError())->setResponse($response)
+        );
+
+        return null;
+    }
+
+    /**
+     * Happening when given token is incorrect.
+     * 
+     * @param string|null $token
+     * @return null
+     */
+    protected function handleInvalidToken($token): null
+    {
+        if ($this->isUsingCookie($token)) {
+            $this->forgetCookie();
+        }
+
+        return null;
+    }
+
+    /**
+     * Telling if given token is corresponding to stored cookie.
+     * 
+     * @param string|null $token
+     * @return bool
+     */
+    public function isUsingCookie($token): bool
+    {
+        return request()->cookie(self::COOKIE_KEY, false) === $token;
+    }
+
+    /**
+     * Telling if having cached user corresponding to token
+     * 
+     * @param string|null $token
+     * @return bool
+     */
+    public function isHavingCachedUser($token): bool
+    {
+        return $this->cacheEnabled() && Cache::has($this->getCacheKey($token));
+    }
+
+    /**
+     * Forgetting cached user matching token.
+     * 
+     * @param string|null $token
+     * @return void
+     */
+    public function forgetCachedUser($token): void
+    {
+        if (!$this->cacheEnabled()):
+            return;
+        endif;
+
+        Cache::forget($this->getCacheKey($token));
+    }
+
+    /**
+     * Forgetting cached user matching token.
+     * 
+     * @param string|null $token
+     * @return TrustupIoUserContract|null
+     */
+    public function getCachedUser($token)
+    {
+        if (!$this->cacheEnabled()):
+            return null;
+        endif;
+
+        Cache::get($this->getCacheKey($token));
+    }
+
+    // faire une méthode qui permet de supprimer le cache de l'utilisateur
     
     public function retrieveByToken($identifier, $token)
     {
@@ -158,9 +255,19 @@ class TrustupIoUserProvider implements UserProvider
         return false;
     }
 
-    public function logout()
+    /**
+     * Used to forget stored cookie.
+     * 
+     * @return void
+     */
+    public function forgetCookie()
     {
         Cookie::queue(Cookie::forget(self::COOKIE_KEY));
+    }
+
+    public function logout()
+    {
+        $this->forgetCookie();
 
         return redirect()->away(
             config('trustup-io-authentification.url').'/logout?callback=' . urlencode(url()->to('/'))
