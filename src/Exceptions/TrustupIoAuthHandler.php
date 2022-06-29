@@ -5,7 +5,7 @@ use Deegitalbe\LaravelTrustupIoAuthentification\Contracts\Exceptions\SkipAuthCon
 use Henrotaym\LaravelFlareExceptionHandler\FlareExceptionHandler;
 use Illuminate\Support\Facades\Log;
 
-class TrustupIoAuthExceptionHandler extends FlareExceptionHandler
+class TrustupIoAuthHandler extends FlareExceptionHandler
 {
     /**
      * Register the exception handling callbacks for the application.
