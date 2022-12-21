@@ -1,4 +1,3 @@
-
 [<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
 
 # Connect your Laravel project to our centralized authentication service
@@ -8,55 +7,56 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/deegitalbe/laravel-trustup-io-authentification/Check%20&%20fix%20styling?label=code%20style)](https://github.com/deegitalbe/laravel-trustup-io-authentification/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/deegitalbe/laravel-trustup-io-authentification.svg?style=flat-square)](https://packagist.org/packages/deegitalbe/laravel-trustup-io-authentification)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-trustup-io-authentification.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-trustup-io-authentification)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
-
 ## Installation
 
-You can install the package via composer:
-
+### Require package
 ```bash
 composer require deegitalbe/laravel-trustup-io-authentification
 ```
-
-You can publish and run the migrations with:
-
+### Publish config
 ```bash
-php artisan vendor:publish --tag="laravel-trustup-io-authentification-migrations"
-php artisan migrate
+php artisan vendor:publish --tag="trustup-io-authentification-config"
 ```
 
-You can publish the config file with:
+This will publish `trustup-io-authentification.php` in config folder
 
-```bash
-php artisan vendor:publish --tag="laravel-trustup-io-authentification-config"
-```
-
-This is the contents of the published config file:
-
+### Define roles
+You should define roles that have access in config file `trustup-io-authentification.php`.
 ```php
-return [
-];
+'roles' => [
+    'Super Admin',
+    'Employee',
+    'Translator'
+],
 ```
 
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-trustup-io-authentification-views"
-```
-
-## Usage
-
+### Define guards
+In config file `auth.php` redefine your guards
 ```php
-$laravelTrustupIoAuthentification = new Deegitalbe\LaravelTrustupIoAuthentification();
-echo $laravelTrustupIoAuthentification->echoPhrase('Hello, Deegitalbe!');
+'guards' => [
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
+        'driver' => 'trustup.io',
+    ],
+    'api' =>[
+        'driver' => 'trustup.io'
+    ]
+],
+```
+
+### Add middleware to protect your restricted routes
+```php
+use Illuminate\Support\Facades\Route;
+use Deegitalbe\LaravelTrustupIoAuthentification\Http\Middleware\TrustUpIoAuthMiddleware;
+
+Route::middleware(TrustUpIoAuthMiddleware::class)->group(function() {
+    // Your restricted routes ...
+});
+
+Route::middleware(TrustUpIoAuthMiddleware::class.':Super Admin|Translator')->group(function() {
+    // Your restricted routes only accessible by super admins or translators ...
+});
 ```
 
 ## Testing
@@ -80,6 +80,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 ## Credits
 
 - [Florian Husquinet](https://github.com/deegitalbe)
+- [Henrotay Mathieu](https://github.com/henrotaym)
 - [All Contributors](../../contributors)
 
 ## License
