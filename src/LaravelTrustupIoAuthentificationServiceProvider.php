@@ -25,6 +25,8 @@ class LaravelTrustupIoAuthentificationServiceProvider extends PackageServiceProv
             // ->hasViews()
             // ->hasMigration('create_laravel-trustup-io-authentification_table')
             // ->hasCommand(LaravelTrustupIoAuthentificationCommand::class)
+        
+        require_once(__DIR__ . '/helpers.php');
     }
     
     public function packageBooted()

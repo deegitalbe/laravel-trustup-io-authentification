@@ -20,7 +20,7 @@ class TrustUpIoAuthMiddleware
         $guard ??= config('trustup-io-authentification.guard');
 
         if ( ! auth($guard)->check() ) {
-            $redirection = config('trustup-io-authentification.url').'?callback=' . $request->fullUrl();
+            $redirection = get_trustup_io_authentification_redirection_url();
             
             return $request->expectsJson()
                 ? response(['message' => 'Unauthentificated', 'redirect' => $redirection], 401)
@@ -33,9 +33,9 @@ class TrustUpIoAuthMiddleware
 
         if ( ! auth($guard)->user()->hasAnyRole($roles) ) {
             return $request->expectsJson()
-                ? response(['message' => 'Invalid role', 'redirect' => config('trustup-io-authentification.url').'/errors/invalid-role'], 403)
+                ? response(['message' => 'Invalid role', 'redirect' => get_trustup_io_authentification_invalid_role_url()], 403)
                 : redirect()->to(
-                    config('trustup-io-authentification.url').'/errors/invalid-role'
+                    get_trustup_io_authentification_invalid_role_url()
                 );
         }
 
