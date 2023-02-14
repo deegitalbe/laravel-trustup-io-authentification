@@ -31,7 +31,7 @@ class TrustUpIoAuthMiddleware
 
         $roles = $roles ? explode('|', $roles) : config('trustup-io-authentification.roles');
 
-        if ( ! auth($guard)->user()->hasAnyRole($roles) ) {
+        if ( ! empty($roles) && ! auth($guard)->user()->hasAnyRole($roles) ) {
             return $request->expectsJson()
                 ? response(['message' => 'Invalid role', 'redirect' => get_trustup_io_authentification_invalid_role_url()], 403)
                 : redirect()->to(
