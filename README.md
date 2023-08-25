@@ -45,6 +45,13 @@ In config file `auth.php` redefine your guards
 ],
 ```
 
+### Activate docker
+In case your application is using docker-integration, define this env variable
+
+```shell
+TRUSTUP_IO_AUTH_DOCKER_ACTIVATED=true
+```
+
 ### Add middleware to protect your restricted routes
 ```php
 use Illuminate\Support\Facades\Route;

@@ -38,12 +38,14 @@ class TrustupIoUserProvider implements UserProvider
 
     public function http(array $headers = [])
     {
+        $baseUrl = $this->getBaseUrl();
+
         $http = Http::withHeaders(
             array_merge($headers, [
                 'X-Server-Authorization' => env('TRUSTUP_SERVER_AUTHORIZATION')
             ])
         )
-        ->baseUrl(config('trustup-io-authentification.url').'/api')
+        ->baseUrl("$baseUrl/api")
         ->acceptJson();
 
         if (env('APP_ENV') !== "production"):
@@ -279,6 +281,24 @@ class TrustupIoUserProvider implements UserProvider
         return redirect()->away(
             config('trustup-io-authentification.url').'/logout?callback=' . urlencode(url()->to('/'))
         );
+    }
+
+    /**
+     * Docker compatible url.
+     * 
+     * Docker is unable to make server to server calls using "https://xxxx".
+     * We have to use service name if docker is activated in configuration.
+     */
+    protected function getBaseUrl(): string
+    {
+        $isUsingDocker = filter_var(
+            config('trustup-io-authentification.docker.activated'),
+            FILTER_VALIDATE_BOOLEAN
+        );
+
+        return $isUsingDocker
+            ? config('trustup-io-authentification.docker.service')
+            : config('trustup-io-authentification.url');
     }
 
 }
