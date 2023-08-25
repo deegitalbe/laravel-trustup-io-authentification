@@ -2,7 +2,10 @@
 
 return [
 
-    'url' => env('TRUSTUP_IO_AUTHENTIFICATION_URL', 'https://auth.trustup.io'),
+    'url' => env(
+        'TRUSTUP_IO_AUTH_URL', 
+        env("TRUSTUP_IO_AUTHENTIFICATION_URL", 'https://auth.trustup.io')
+    ),
 
     /**
      * After a successfull authentication, the user will be redirected to this URL.
