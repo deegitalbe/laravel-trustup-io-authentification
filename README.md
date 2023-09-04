@@ -66,6 +66,22 @@ Route::middleware(TrustUpIoAuthMiddleware::class.':Super Admin|Translator')->gro
 });
 ```
 
+## Docker compatibility
+Update package to latest version
+```bash
+composer require deegitalbe/laravel-trustup-io-authentification
+```
+
+Force config publication and set correct values (model, roles, guard, ...)
+```bash
+php artisan vendor:publish --tag="trustup-io-authentification-config" --force
+```
+
+Define env variable
+```shell
+TRUSTUP_IO_AUTH_DOCKER_ACTIVATED=true
+```
+
 ## Testing
 
 ```bash
