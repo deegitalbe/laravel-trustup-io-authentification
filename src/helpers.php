@@ -34,3 +34,24 @@ if ( ! function_exists('get_trustup_io_authentification_invalid_role_url') )
     }
 
 }
+
+if ( ! function_exists('get_trustup_io_authentification_base_url') )
+{
+    /**
+     * Docker compatible url.
+     * 
+     * Docker is unable to make server to server calls using "https://xxxx".
+     * We have to use service name if docker is activated in configuration.
+     */
+    function get_trustup_io_authentification_base_url(): string
+    {
+        $isUsingDocker = filter_var(
+            config('trustup-io-authentification.docker.activated'),
+            FILTER_VALIDATE_BOOLEAN
+        );
+
+        return $isUsingDocker
+            ? config('trustup-io-authentification.docker.service')
+            : config('trustup-io-authentification.url');
+    }
+}
