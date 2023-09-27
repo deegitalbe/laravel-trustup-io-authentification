@@ -291,14 +291,7 @@ class TrustupIoUserProvider implements UserProvider
      */
     protected function getBaseUrl(): string
     {
-        $isUsingDocker = filter_var(
-            config('trustup-io-authentification.docker.activated'),
-            FILTER_VALIDATE_BOOLEAN
-        );
-
-        return $isUsingDocker
-            ? config('trustup-io-authentification.docker.service')
-            : config('trustup-io-authentification.url');
+        return get_trustup_io_authentification_base_url();
     }
 
 }
