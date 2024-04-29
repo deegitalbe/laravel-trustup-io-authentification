@@ -294,4 +294,9 @@ class TrustupIoUserProvider implements UserProvider
         return get_trustup_io_authentification_base_url();
     }
 
+    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false)
+    {
+        return;
+    }
+
 }
