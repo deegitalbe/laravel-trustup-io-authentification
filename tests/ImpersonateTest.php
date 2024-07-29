@@ -32,14 +32,14 @@ test('getUser returns user with impersonation', function () {
     $impersonatingUser = Mockery::mock(TrustupIoUser::class);
 
     $impersonatingUser->shouldReceive('hasAnyRole')->andReturn(true);
-    $impersonatingUser->shouldReceive('getAuthIdentifier')->andReturn(2);
+    $impersonatingUser->shouldReceive('getAttribute')->andReturn(2);
 
     $user->shouldReceive('setImpersonatingUserId')->with(2);
 
     $this->userService->shouldReceive('getToken')->andReturn($token);
     $this->userService->shouldReceive('retrieveByBearerToken')->with($token)->andReturn($user);
     $this->userService->shouldReceive('getImpersonatingToken')->andReturn($impersonateToken);
-    $this->userService->shouldReceive('retrieveByBearerToken')->with($impersonateToken)->andReturn($impersonatingUser);
+    $this->userService->shouldReceive('retrieveImpersonatingByBearerToken')->with($impersonateToken, $user)->andReturn($impersonatingUser);
 
     $result = $this->userService->getUser();
     expect($result)->toBe($user);
@@ -52,13 +52,17 @@ test('getUser returns null when impersonating user has no valid role', function 
     $user = Mockery::mock(TrustupIoUser::class);
     $impersonatingUser = Mockery::mock(TrustupIoUser::class);
 
+    // Mock behavior for impersonating user
     $impersonatingUser->shouldReceive('hasAnyRole')->andReturn(false);
 
+    // Mock behavior for UserService
     $this->userService->shouldReceive('getToken')->andReturn($token);
     $this->userService->shouldReceive('retrieveByBearerToken')->with($token)->andReturn($user);
     $this->userService->shouldReceive('getImpersonatingToken')->andReturn($impersonateToken);
-    $this->userService->shouldReceive('retrieveByBearerToken')->with($impersonateToken)->andReturn($impersonatingUser);
+    $this->userService->shouldReceive('retrieveImpersonatingByBearerToken')->with($impersonateToken, $user)->andReturn($impersonatingUser);
 
+    // Call the method and verify the result
     $result = $this->userService->getUser();
-    expect($result)->toBeNull();
+    $this->assertNull($result);
 });
+

@@ -77,7 +77,6 @@ class TrustupIoUserProvider implements UserProvider
 
         if ($this->getImpersonatingToken()) {
             $impersonatingUser = $this->retrieveImpersonatingByBearerToken($this->getImpersonatingToken(), $user);
-
             if (!$impersonatingUser->hasAnyRole(config('trustup-io-authentification.roles'))) {
                 return null;
             }
