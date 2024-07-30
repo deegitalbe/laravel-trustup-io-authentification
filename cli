@@ -1,0 +1,68 @@
+#!/bin/bash
+
+REGISTRY=henrotaym 
+PROJECT=laravel-trustup-io-authentification
+TAG=$REGISTRY/$PROJECT:local
+
+build() {
+    docker build \
+		--tag $TAG \
+		--build-arg UID=$(id -u) \
+		--build-arg GID=$(id -g) \
+		. && \
+        npx lefthook install
+}
+
+run() {
+	docker run \
+		--volume $PWD:/opt/apps/app \
+		--user $(id -u):$(id -g) \
+		--rm \
+        --interactive \
+		--tty \
+		$TAG "$@"
+}
+
+if [ "$1" == "bootstrap" ]
+    then
+        build
+    exit
+fi
+
+if [ "$1" == "artisan" ]
+    then
+        ./cli php artisan ${@:2}
+    exit
+fi
+
+if [ "$1" == "test" ]
+    then
+        run ./vendor/bin/pest
+    exit
+fi
+
+if [ "$1" == "testf" ]
+    then
+        run ./vendor/bin/pest --filter "'${*:2}'"
+    exit
+fi
+
+if [ "$1" == "testg" ]
+    then
+        test ./vendor/bin/pest --group "'${*:2}'"
+    exit
+fi
+
+if [ "$1" == "format" ]
+    then
+        run ./vendor/bin/pint ${@:2}
+    exit
+fi
+
+if [ "$1" == "analyze" ]
+    then
+        run ./vendor/bin/phpstan analyse ${@:2}
+    exit
+fi
+
+run $@
