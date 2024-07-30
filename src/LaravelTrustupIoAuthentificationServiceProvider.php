@@ -2,12 +2,10 @@
 
 namespace Deegitalbe\LaravelTrustupIoAuthentification;
 
+use Deegitalbe\LaravelTrustupIoAuthentification\Commands\LaravelTrustupIoAuthentificationCommand;
 use Illuminate\Support\Facades\Auth;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Deegitalbe\LaravelTrustupIoAuthentification\TrustupIoUserGuard;
-use Deegitalbe\LaravelTrustupIoAuthentification\TrustupIoUserProvider;
-use Deegitalbe\LaravelTrustupIoAuthentification\Commands\LaravelTrustupIoAuthentificationCommand;
 
 class LaravelTrustupIoAuthentificationServiceProvider extends PackageServiceProvider
 {
@@ -22,13 +20,13 @@ class LaravelTrustupIoAuthentificationServiceProvider extends PackageServiceProv
             ->name('laravel-trustup-io-authentification')
             ->hasConfigFile()
             ->hasRoute('callback');
-            // ->hasViews()
-            // ->hasMigration('create_laravel-trustup-io-authentification_table')
-            // ->hasCommand(LaravelTrustupIoAuthentificationCommand::class)
-        
-        require_once(__DIR__ . '/helpers.php');
+        // ->hasViews()
+        // ->hasMigration('create_laravel-trustup-io-authentification_table')
+        // ->hasCommand(LaravelTrustupIoAuthentificationCommand::class)
+
+        require_once __DIR__.'/helpers.php';
     }
-    
+
     public function packageBooted()
     {
         Auth::provider('trustup.io.provider', function ($app) {
@@ -39,11 +37,11 @@ class LaravelTrustupIoAuthentificationServiceProvider extends PackageServiceProv
             return $app->make(TrustupIoUserGuard::class);
         });
 
-        $this->app->singleton(TrustupIoUserProvider::class, function($app) {
+        $this->app->singleton(TrustupIoUserProvider::class, function ($app) {
             return new TrustupIoUserProvider;
         });
 
-        $this->app->bind(TrustupIoUserContract::class, function() {
+        $this->app->bind(TrustupIoUserContract::class, function () {
             return config('trustup-io-authentification.model');
         });
     }

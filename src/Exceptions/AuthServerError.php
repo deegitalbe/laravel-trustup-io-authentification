@@ -1,13 +1,14 @@
 <?php
+
 namespace Deegitalbe\LaravelTrustupIoAuthentification\Exceptions;
 
+use Deegitalbe\LaravelTrustupIoAuthentification\Contracts\Exceptions\SkipAuthContextContract;
 use Exception;
 use Illuminate\Http\Client\Response;
-use Deegitalbe\LaravelTrustupIoAuthentification\Contracts\Exceptions\SkipAuthContextContract;
 
 class AuthServerError extends Exception implements SkipAuthContextContract
 {
-    protected $message = "Auth server could not authenticate user.";
+    protected $message = 'Auth server could not authenticate user.';
 
     protected $code = 500;
 
@@ -19,8 +20,7 @@ class AuthServerError extends Exception implements SkipAuthContextContract
 
     /**
      * Setting related response
-     * 
-     * @param Response $response
+     *
      * @return static
      */
     public function setResponse(Response $response): self
@@ -33,26 +33,26 @@ class AuthServerError extends Exception implements SkipAuthContextContract
 
     /**
      * Setting related identifier.
-     * 
-     * @param string|null $identifier
+     *
+     * @param  string|null  $identifier
      * @return static
      */
     public function setIdentifier($identifier): self
     {
         $this->identifier = $identifier;
-        
+
         return $this;
     }
 
     public function context()
     {
         return [
-            "identifier" => $this->identifier,
-            "response" => [
-                "status" => $this->response->status(),
-                "body" => $this->response->json(),
-                "message" => $this->response->reason() 
-            ]
+            'identifier' => $this->identifier,
+            'response' => [
+                'status' => $this->response->status(),
+                'body' => $this->response->json(),
+                'message' => $this->response->reason(),
+            ],
         ];
     }
 }
