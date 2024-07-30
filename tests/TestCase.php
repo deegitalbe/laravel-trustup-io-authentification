@@ -2,9 +2,9 @@
 
 namespace Deegitalbe\LaravelTrustupIoAuthentification\Tests;
 
+use Deegitalbe\LaravelTrustupIoAuthentification\LaravelTrustupIoAuthentificationServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Deegitalbe\LaravelTrustupIoAuthentification\LaravelTrustupIoAuthentificationServiceProvider;
 
 class TestCase extends Orchestra
 {

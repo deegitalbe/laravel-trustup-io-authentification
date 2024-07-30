@@ -4,7 +4,7 @@
 # https://github.com/mlocati/docker-php-extension-installer/issues/857#issuecomment-1904396267
 
 # Application CLI
-FROM php:8.2-cli-alpine3.19 as cli
+FROM php:8.2-cli-alpine3.19 AS cli
 
 # Set current user
 USER root

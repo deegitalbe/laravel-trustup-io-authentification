@@ -3,12 +3,11 @@
 namespace Deegitalbe\LaravelTrustupIoAuthentification;
 
 use Exception;
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Guard;
 
 class TrustupIoUserGuard implements Guard
 {
-
     protected ?Authenticatable $user = null;
 
     /**
@@ -58,13 +57,12 @@ class TrustupIoUserGuard implements Guard
      */
     public function id()
     {
-        return $this->user()?->id;
+        return $this->user()?->getAuthIdentifier();
     }
 
     /**
      * Validate a user's credentials.
      *
-     * @param  array  $credentials
      * @return bool
      */
     public function validate(array $credentials = [])
@@ -85,7 +83,6 @@ class TrustupIoUserGuard implements Guard
     /**
      * Set the current user.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return void
      */
     public function setUser(Authenticatable $user)

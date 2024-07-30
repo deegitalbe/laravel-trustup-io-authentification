@@ -1,9 +1,9 @@
 <?php
+
 namespace Deegitalbe\LaravelTrustupIoAuthentification\Exceptions;
 
 use Deegitalbe\LaravelTrustupIoAuthentification\Contracts\Exceptions\SkipAuthContextContract;
 use Henrotaym\LaravelFlareExceptionHandler\Context\FlareContext;
-use Henrotaym\LaravelFlareExceptionHandler\FlareExceptionHandler;
 use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Support\Facades\Log;
 
