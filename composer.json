@@ -17,7 +17,6 @@
     ],
     "require": {
         "php": "^8.0",
-        "guzzlehttp/guzzle": "^7.9",
         "henrotaym/laravel-flare-exception-handler": "^2.0",
         "illuminate/contracts": "^8.0|^9.0",
         "spatie/laravel-package-tools": "^1.9.2"
@@ -50,7 +49,8 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
         }
     },
     "extra": {
