@@ -1,68 +1,51 @@
 #!/bin/bash
 
-REGISTRY=henrotaym 
-PROJECT=laravel-trustup-io-authentification
-TAG=$REGISTRY/$PROJECT:local
-
-build() {
-    docker build \
-		--tag $TAG \
-		--build-arg UID=$(id -u) \
-		--build-arg GID=$(id -g) \
-		. && \
-        npx lefthook install
-}
-
-run() {
-	docker run \
-		--volume $PWD:/opt/apps/app \
-		--user $(id -u):$(id -g) \
-		--rm \
-        --interactive \
-		--tty \
-		$TAG "$@"
-}
-
 if [ "$1" == "bootstrap" ]
     then
-        build
+        ./scripts/bootstrap.sh
     exit
 fi
 
-if [ "$1" == "artisan" ]
+if [ "$1" == "run" ]
     then
-        ./cli php artisan ${@:2}
+        docker compose run --rm -it "${@:2}"
+    exit
+fi
+
+if [ "$1" == "bun" ]
+    then
+        ./cli run bun $@
     exit
 fi
 
 if [ "$1" == "test" ]
     then
-        run ./vendor/bin/pest
+        ./cli run cli ./vendor/bin/pest "${@:2}"
     exit
 fi
 
 if [ "$1" == "testf" ]
     then
-        run ./vendor/bin/pest --filter "'${*:2}'"
-    exit
-fi
-
-if [ "$1" == "testg" ]
-    then
-        test ./vendor/bin/pest --group "'${*:2}'"
+        ./cli test --filter="${@:2}"
     exit
 fi
 
 if [ "$1" == "format" ]
     then
-        run ./vendor/bin/pint ${@:2}
+        ./cli run cli ./vendor/bin/pint ${@:2}
     exit
 fi
 
 if [ "$1" == "analyze" ]
     then
-        run ./vendor/bin/phpstan analyse ${@:2}
+        ./cli run cli ./vendor/bin/phpstan analyse ${@:2}
     exit
 fi
 
-run $@
+if [ "$1" == "composer" ]
+    then
+        ./cli run cli composer "${@:2}"
+    exit
+fi
+
+./cli run cli $@

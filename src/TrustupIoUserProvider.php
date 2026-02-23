@@ -361,6 +361,11 @@ class TrustupIoUserProvider implements UserProvider
         return false;
     }
 
+    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false)
+    {
+        // Not applicable for token-based authentication
+    }
+
     /**
      * Used to forget stored cookie.
      *

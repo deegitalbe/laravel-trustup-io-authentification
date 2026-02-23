@@ -32,6 +32,11 @@ class TrustupIoUser extends Model implements Authenticatable, TrustupIoUserContr
         return $this->password;
     }
 
+    public function getAuthPasswordName()
+    {
+        return 'password';
+    }
+
     public function getRememberToken()
     {
         throw new Exception('Cannot get the remember me token.');
