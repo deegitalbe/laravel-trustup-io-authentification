@@ -1,6 +1,6 @@
 {
     "name": "@deegitalbe/laravel-trustup-io-authentification",
-    "version": "3.0.0",
+    "version": "4.0.0",
     "main": "index.js",
     "repository": "git@github.com:deegitalbe/laravel-trustup-io-authentification.git",
     "author": "Mathieu Henrotay <mathieu.henrotay@gmail.com>",
