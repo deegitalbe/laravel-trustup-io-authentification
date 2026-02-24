@@ -7,6 +7,15 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/deegitalbe/laravel-trustup-io-authentification/Check%20&%20fix%20styling?label=code%20style)](https://github.com/deegitalbe/laravel-trustup-io-authentification/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/deegitalbe/laravel-trustup-io-authentification.svg?style=flat-square)](https://packagist.org/packages/deegitalbe/laravel-trustup-io-authentification)
 
+## Compatibility
+
+| Laravel | Package |
+|---|---|
+| 8.x / 9.x | 1.x |
+| 10.x | 2.x |
+| 10.x / 11.x | 3.x |
+| 12.x | 4.x |
+
 ## Installation
 
 ### Require package
