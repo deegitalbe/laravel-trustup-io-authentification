@@ -60,6 +60,12 @@ In case your application is using docker-integration, define this env variable
 TRUSTUP_IO_AUTH_DOCKER_ACTIVATED=true
 ```
 
+Optionally override the docker service URL (must include a scheme, default `http://trustup-io-auth`)
+
+```shell
+TRUSTUP_IO_AUTH_DOCKER_URL=http://trustup-io-auth
+```
+
 ### Add middleware to protect your restricted routes
 ```php
 use Illuminate\Support\Facades\Route;
@@ -85,9 +91,11 @@ Force config publication and set correct values (model, roles, guard, ...)
 php artisan vendor:publish --tag="trustup-io-authentification-config" --force
 ```
 
-Define env variable
+Define env variables
 ```shell
 TRUSTUP_IO_AUTH_DOCKER_ACTIVATED=true
+# Optional, must include a scheme (default http://trustup-io-auth)
+TRUSTUP_IO_AUTH_DOCKER_URL=http://trustup-io-auth
 ```
 
 ## Testing
