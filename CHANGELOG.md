@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.2
+
+### Patch Changes
+
+- 5ebad4a: Declare register(): void in TrustupIoAuthHandler so apps extending it boot with henrotaym/laravel-flare-exception-handler 4
+
 ## 4.0.1
 
 ### Patch Changes
