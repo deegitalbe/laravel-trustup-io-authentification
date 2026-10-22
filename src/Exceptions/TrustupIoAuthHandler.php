@@ -8,12 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class TrustupIoAuthHandler extends FlareExceptionHandler
 {
-    /**
-     * Register the exception handling callbacks for the application.
-     *
-     * @return void
-     */
-    public function register()
+    public function register(): void
     {
         $this->reportable(function (SkipAuthContextContract $e) {
             $this->reportContextToFlare($e);
