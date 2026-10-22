@@ -16,7 +16,7 @@ None.
 
 ## Files
 
--   `src/Exceptions/TrustupIoAuthHandler.php` (modified) — `public function register(): void`; drop the `@return void` line of the docblock, keep the summary line. Nothing else changes in the body.
+-   `src/Exceptions/TrustupIoAuthHandler.php` (modified) — `public function register(): void`; remove the docblock, it only restated the method. Nothing else changes in the body.
 -   `tests/TrustupIoAuthHandlerTest.php` (new) — Pest test, same style as `tests/ImpersonateTest.php`; runs on `tests/TestCase.php` through `tests/Pest.php`. Bind `Illuminate\Contracts\Debug\ExceptionHandler` to `TrustupIoAuthHandler` as a singleton in the test.
 -   `.changeset/flare-4-register-void.md` (new) — frontmatter `"@deegitalbe/laravel-trustup-io-authentification": patch`, body one line: `Declare register(): void in TrustupIoAuthHandler so apps extending it boot with henrotaym/laravel-flare-exception-handler 4`.
 
